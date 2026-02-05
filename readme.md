@@ -124,7 +124,7 @@ php artisan vendor:publish --tag=html-config
 
 ## 📖 Documentation
 
-Complete documentation available in the [Wiki](wiki/Home.md):
+Complete documentation available in the repository:
 
 - [Installation Guide](wiki/Installation.md)
 - [Quick Start](wiki/Quick-Start.md)
