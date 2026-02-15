@@ -43,11 +43,55 @@ $capsule->setEventDispatcher(new Dispatcher);
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
+/*
+|--------------------------------------------------------------------------
+| Setup Config Repository
+|--------------------------------------------------------------------------
+*/
+$container = $capsule->getContainer();
+$container->singleton('config', function () {
+  return new \Illuminate\Config\Repository([
+    'html' => [
+      'theme' => null,
+      'themes' => [],
+    ],
+  ]);
+});
+
+// Ensure the Facade knows about the container
+\Illuminate\Support\Facades\Facade::setFacadeApplication($container);
+
+if (!function_exists('config')) {
+  /**
+   * Get / set the specified configuration value.
+   *
+   * If an array is passed as the key, we will assume you want to set an array of values.
+   *
+   * @param  array|string|null  $key
+   * @param  mixed  $default
+   * @return mixed|\Illuminate\Config\Repository
+   */
+  function config($key = null, $default = null)
+  {
+    $config = \Illuminate\Support\Facades\Facade::getFacadeApplication()->make('config');
+
+    if (is_null($key)) {
+      return $config;
+    }
+
+    if (is_array($key)) {
+      return $config->set($key);
+    }
+
+    return $config->get($key, $default);
+  }
+}
+
 $capsule->schema()->dropIfExists('models');
 
 $capsule->schema()->create('models', function (Blueprint $table) {
-    $table->increments('id');
-    $table->string('string');
-    $table->string('email');
-    $table->timestamps();
+  $table->increments('id');
+  $table->string('string');
+  $table->string('email');
+  $table->timestamps();
 });
