@@ -403,7 +403,7 @@ class HtmlBuilder
      *
      * @return \Illuminate\Support\HtmlString|string
      */
-    public function ol(array $list, array $attributes = []): HtmlString|string
+    public function ol(array $list, array $attributes = [])
     {
         return $this->listing('ol', $list, $attributes);
     }
@@ -416,7 +416,7 @@ class HtmlBuilder
      *
      * @return \Illuminate\Support\HtmlString|string
      */
-    public function ul(array $list, array $attributes = []): HtmlString|string
+    public function ul(array $list, array $attributes = [])
     {
         return $this->listing('ul', $list, $attributes);
     }
@@ -459,7 +459,7 @@ class HtmlBuilder
      *
      * @return \Illuminate\Support\HtmlString|string
      */
-    protected function listing(string $type, array $list, array $attributes = []): HtmlString|string
+    protected function listing(string $type, array $list, array $attributes = [])
     {
         $html = '';
 
@@ -488,7 +488,7 @@ class HtmlBuilder
      *
      * @return string
      */
-    protected function listingElement(mixed $key, string $type, mixed $value): string
+    protected function listingElement($key, string $type, $value): string
     {
         if (is_array($value)) {
             return $this->nestedListing($key, $type, $value);
@@ -506,7 +506,7 @@ class HtmlBuilder
      *
      * @return string
      */
-    protected function nestedListing(mixed $key, string $type, mixed $value): string
+    protected function nestedListing($key, string $type, $value): string
     {
         if (is_int($key)) {
             return $this->listing($type, $value);
@@ -545,7 +545,7 @@ class HtmlBuilder
      *
      * @return string|null
      */
-    protected function attributeElement(mixed $key, mixed $value): ?string
+    protected function attributeElement($key, $value): ?string
     {
         // For numeric keys we will assume that the value is a boolean attribute
         // where the presence of the attribute represents a true value and the
@@ -635,7 +635,7 @@ class HtmlBuilder
      *
      * @return \Illuminate\Support\HtmlString
      */
-    public function tag(string $tag, mixed $content, array $attributes = []): HtmlString
+    public function tag(string $tag, $content, array $attributes = []): HtmlString
     {
         $content = is_array($content) ? implode('', $content) : $content;
         return $this->toHtmlString('<' . $tag . $this->attributes($attributes) . '>' . $this->toHtmlString((string) $content) . '</' . $tag . '>');
@@ -760,7 +760,7 @@ class HtmlBuilder
      * @param  array|null $attributes If provided, returns an img tag; otherwise returns URL
      * @return string|\Illuminate\Support\HtmlString
      */
-    public function gravatar(string $email, int $size = 80, string $default = 'mp', string $rating = 'g', ?array $attributes = null): string|HtmlString
+    public function gravatar(string $email, int $size = 80, string $default = 'mp', string $rating = 'g', ?array $attributes = null)
     {
         $hash = md5(strtolower(trim($email)));
         $url = "https://www.gravatar.com/avatar/{$hash}?s={$size}&d={$default}&r={$rating}";
@@ -783,7 +783,7 @@ class HtmlBuilder
      * @param  string $inactiveClass
      * @return string
      */
-    public function activeClass(string|array $routes, string $activeClass = 'active', string $inactiveClass = ''): string
+    public function activeClass($routes, string $activeClass = 'active', string $inactiveClass = ''): string
     {
         $routes = (array) $routes;
 
@@ -804,7 +804,7 @@ class HtmlBuilder
                 }
 
                 // Try matching as URL pattern
-                if (str_contains($currentUrl, $route) || fnmatch($route, $currentUrl)) {
+                if (strpos($currentUrl, $route) !== false || fnmatch($route, $currentUrl)) {
                     return $activeClass;
                 }
             }

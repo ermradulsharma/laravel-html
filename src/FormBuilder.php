@@ -221,7 +221,7 @@ class FormBuilder
      *
      * @return \Illuminate\Support\HtmlString
      */
-    public function model(mixed $model, array $options = []): HtmlString
+    public function model($model, array $options = []): HtmlString
     {
         $this->model = $model;
 
@@ -235,7 +235,7 @@ class FormBuilder
      *
      * @return void
      */
-    public function setModel(mixed $model): void
+    public function setModel($model): void
     {
         $this->model = $model;
     }
@@ -245,7 +245,7 @@ class FormBuilder
      *
      * @return mixed $model
      */
-    public function getModel(): mixed
+    public function getModel()
     {
         return $this->model;
     }
@@ -367,14 +367,27 @@ class FormBuilder
         }
 
         if ($value instanceof DateTime) {
-            $format = match ($type) {
-                'date' => 'Y-m-d',
-                'datetime', 'datetime-local' => 'Y-m-d\TH:i',
-                'month' => 'Y-m',
-                'time' => 'H:i',
-                'week' => 'Y-\WW',
-                default => 'Y-m-d H:i:s',
-            };
+            switch ($type) {
+                case 'date':
+                    $format = 'Y-m-d';
+                    break;
+                case 'datetime':
+                case 'datetime-local':
+                    $format = 'Y-m-d\TH:i';
+                    break;
+                case 'month':
+                    $format = 'Y-m';
+                    break;
+                case 'time':
+                    $format = 'H:i';
+                    break;
+                case 'week':
+                    $format = 'Y-\WW';
+                    break;
+                default:
+                    $format = 'Y-m-d H:i:s';
+                    break;
+            }
             $value = $value->format($format);
         }
 
@@ -509,7 +522,7 @@ class FormBuilder
      *
      * @return \Illuminate\Support\HtmlString
      */
-    public function number(string $name, mixed $value = null, array $options = []): HtmlString
+    public function number(string $name, $value = null, array $options = []): HtmlString
     {
         return $this->input('number', $name, $value, $options);
     }
@@ -523,7 +536,7 @@ class FormBuilder
      *
      * @return \Illuminate\Support\HtmlString
      */
-    public function date(string $name, mixed $value = null, array $options = []): HtmlString
+    public function date(string $name, $value = null, array $options = []): HtmlString
     {
         return $this->input('date', $name, $value, $options);
     }
@@ -537,7 +550,7 @@ class FormBuilder
      *
      * @return \Illuminate\Support\HtmlString
      */
-    public function datetime(string $name, mixed $value = null, array $options = []): HtmlString
+    public function datetime(string $name, $value = null, array $options = []): HtmlString
     {
         return $this->input('datetime', $name, $value, $options);
     }
@@ -551,7 +564,7 @@ class FormBuilder
      *
      * @return \Illuminate\Support\HtmlString
      */
-    public function datetimeLocal(string $name, mixed $value = null, array $options = []): HtmlString
+    public function datetimeLocal(string $name, $value = null, array $options = []): HtmlString
     {
         return $this->input('datetime-local', $name, $value, $options);
     }
@@ -565,7 +578,7 @@ class FormBuilder
      *
      * @return \Illuminate\Support\HtmlString
      */
-    public function time(string $name, mixed $value = null, array $options = []): HtmlString
+    public function time(string $name, $value = null, array $options = []): HtmlString
     {
         return $this->input('time', $name, $value, $options);
     }
@@ -579,7 +592,7 @@ class FormBuilder
      *
      * @return \Illuminate\Support\HtmlString
      */
-    public function url(string $name, mixed $value = null, array $options = []): HtmlString
+    public function url(string $name, $value = null, array $options = []): HtmlString
     {
         return $this->input('url', $name, $value, $options);
     }
@@ -593,7 +606,7 @@ class FormBuilder
      *
      * @return \Illuminate\Support\HtmlString
      */
-    public function week(string $name, mixed $value = null, array $options = []): HtmlString
+    public function week(string $name, $value = null, array $options = []): HtmlString
     {
         return $this->input('week', $name, $value, $options);
     }
@@ -850,7 +863,7 @@ class FormBuilder
      *
      * @return \Illuminate\Support\HtmlString|string
      */
-    public function getSelectOption($display, $value, $selected, array $optionsAttributes = [], array $optgroupsAttributes = []): HtmlString|string
+    public function getSelectOption($display, $value, $selected, array $optionsAttributes = [], array $optgroupsAttributes = [])
     {
         if (is_iterable($display)) {
             return $this->optionGroup($display, $value, $selected, $optgroupsAttributes, $optionsAttributes);
@@ -1154,7 +1167,7 @@ class FormBuilder
      *
      * @return \Illuminate\Support\HtmlString
      */
-    public function month(string $name, mixed $value = null, array $options = []): HtmlString
+    public function month(string $name, $value = null, array $options = []): HtmlString
     {
         return $this->input('month', $name, $value, $options);
     }
@@ -1408,7 +1421,7 @@ class FormBuilder
      *
      * @return mixed
      */
-    public function getValueAttribute(?string $name, mixed $value = null): mixed
+    public function getValueAttribute(?string $name, $value = null)
     {
         if (is_null($name)) {
             return $value;
@@ -1490,7 +1503,7 @@ class FormBuilder
      *
      * @var array
      */
-    protected array $pendingAttributes = [];
+    protected $pendingAttributes = [];
 
     /**
      * Wrap the input element with an icon.
@@ -1711,7 +1724,7 @@ class FormBuilder
      * @param string|array $rules Laravel validation rules
      * @return $this
      */
-    public function rules(string|array $rules): self
+    public function rules($rules): self
     {
         $this->pendingRules = $rules;
 
@@ -1725,7 +1738,7 @@ class FormBuilder
      * @param array $options
      * @return array
      */
-    protected function parseValidationRules(string|array $rules, array $options): array
+    protected function parseValidationRules($rules, array $options): array
     {
         if (is_string($rules)) {
             $rules = explode('|', $rules);
@@ -1733,7 +1746,7 @@ class FormBuilder
 
         foreach ($rules as $rule) {
             // Handle rules with parameters
-            if (str_contains($rule, ':')) {
+            if (strpos($rule, ':') !== false) {
                 [$ruleName, $parameters] = explode(':', $rule, 2);
                 $parameters = explode(',', $parameters);
             } else {
@@ -1909,7 +1922,7 @@ class FormBuilder
      *
      * @return array|null|string
      */
-    protected function request(?string $name): array|null|string
+    protected function request(?string $name)
     {
         if (!$this->considerRequest) {
             return null;
@@ -1929,7 +1942,7 @@ class FormBuilder
      *
      * @return mixed
      */
-    protected function getModelValueAttribute(string $name): mixed
+    protected function getModelValueAttribute(string $name)
     {
         $key = $this->transformKey($name);
 
@@ -1947,7 +1960,7 @@ class FormBuilder
      *
      * @return mixed
      */
-    public function old(string $name): mixed
+    public function old(string $name)
     {
         if (isset($this->session)) {
             $key = $this->transformKey($name);
@@ -2112,11 +2125,14 @@ class FormBuilder
     {
         $theme = $this->html->getTheme();
 
-        return match ($theme) {
-            'bootstrap' => 'is-invalid',
-            'tailwind' => 'border-red-500',
-            default => null,
-        };
+        switch ($theme) {
+            case 'bootstrap':
+                return 'is-invalid';
+            case 'tailwind':
+                return 'border-red-500';
+            default:
+                return null;
+        }
     }
 
     /**
